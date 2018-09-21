@@ -1,50 +1,28 @@
 package pl.mhtusz.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
-import pl.mhtusz.data.NBPTableRepository;
-import pl.mhtusz.model.NBPTable;
+import org.springframework.web.servlet.ModelAndView;
+import pl.mhtusz.sevice.NBPTableService;
 
 
 
 @Controller
 public class HomeController {
 	
-	
-    private NBPTableRepository nBPTableRepository;
-
-    @Autowired
-    public HomeController(NBPTableRepository nBPTableRepository) {
-        this.nBPTableRepository = nBPTableRepository;
-    }	
+	@Autowired
+	private NBPTableService nbpTableService;
 
 	
+
 	@GetMapping("/")
-    public String refresch(Model model) {
-		RestTemplate restTemplate = new RestTemplate();
-    	NBPTable[] nbpTable = restTemplate.getForObject("http://api.nbp.pl/api/exchangerates/tables/a", NBPTable[].class);
-    	model.addAttribute("tableA", nbpTable[0]);
+	public ModelAndView refresch() {
 
-       	NBPTable[] nbpTableB = restTemplate.getForObject("http://api.nbp.pl/api/exchangerates/tables/b", NBPTable[].class);
-        model.addAttribute("tableB", nbpTableB[0]);
-               
-    	if (nBPTableRepository.findByNo(nbpTable[0].getNo()).size()==0) {
-    		nBPTableRepository.save(nbpTable[0]); 
-    	};
-    	
-    	
-    	if (nBPTableRepository.findByNo(nbpTableB[0].getNo()).size()==0) {
-    		nBPTableRepository.save(nbpTableB[0]);
-    	};   	
-    	
+		ModelAndView modelAndView = new ModelAndView("nbptables");
+		modelAndView.addObject("tableA", nbpTableService.getNBPTable("a"));
+		modelAndView.addObject("tableB", nbpTableService.getNBPTable("b"));
+		return modelAndView;
+	}
 
-        return "nbptables";
-    }
-	
-	
-    
 }
