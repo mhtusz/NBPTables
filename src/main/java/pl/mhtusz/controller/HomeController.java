@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-import pl.mhtusz.sevice.NBPTableService;
+
+import pl.mhtusz.service.NBPTableService;
+
 
 
 
@@ -17,7 +19,7 @@ public class HomeController {
 	
 
 	@GetMapping("/")
-	public ModelAndView refresch() {
+	public ModelAndView refresh() {
 
 		ModelAndView modelAndView = new ModelAndView("nbptables");
 		modelAndView.addObject("tableA", nbpTableService.getNBPTable("a"));
